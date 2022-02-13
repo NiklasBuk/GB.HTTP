@@ -46,10 +46,10 @@ const requestListener = (req, res) => {
          }
       })
    } else if (req.url === "/post" && req.method === "POST") {
-      const strCookie = req.headers.cookie
+      const objCookie = parsedCookie(req.header.cookie)
       if (
-         parsedCookie(strCookie).userId === user.id &&
-         parsedCookie(strCookie).authorized
+         objCookie.userId === user.id &&
+         objCookie.authorized
       ) {
          let data = ""
          req.on("data", (chunk) => {
@@ -84,10 +84,10 @@ const requestListener = (req, res) => {
          res.end(`Вы не авторизованы`)
       }
    } else if (req.url === "/delete" && req.method === "DELETE") {
-      const strCookie = req.headers.cookie
+      const objCookie = parsedCookie(req.header.cookie)
       if (
-         parsedCookie(strCookie).userId === user.id &&
-         parsedCookie(strCookie).authorized
+         objCookie.userId === user.id &&
+         objCookie.authorized
       ) {
          let data = ""
          req.on("data", (chunk) => {
@@ -109,7 +109,7 @@ const requestListener = (req, res) => {
             }
          })
          res.writeHead(200)
-         res.end(`Пользователь ${parsedCookie(strCookie).username} удалил файл`)
+         res.end(`Пользователь ${objCookie.username} удалил файл`)
       } else {
          res.writeHead(200)
          res.end(`Вы не авторизованы`)
