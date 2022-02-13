@@ -19,9 +19,12 @@ const requestListener = (req, res) => {
       req.on("end", () => {
          const parsedData = JSON.parse(data)
          if (
-            parsedData.username === user.username && 
-            parsedData.password === user.password
+            parsedData.username !== user.username && 
+            parsedData.password !== user.password
             ) {
+            res.writeHead(400)
+            res.end("Неправильный логин или пароль")
+         } else {
             let setUserID = `${user.id};
                Expires=${new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toUTCString()};
                max_age=${60 * 60 * 24 * 2};
@@ -40,17 +43,18 @@ const requestListener = (req, res) => {
             ])
             res.writeHead(200)
             res.end(`Добро пожаловать, ${user.username}!`)
-         } else {
-            res.writeHead(400)
-            res.end("Неправильный логин или пароль")
          }
       })
-   } else if (req.url === "/post" && req.method === "POST") {
+   } else if (
+      req.url === "/post" && 
+      req.method === "POST"
+   ) {
       const objCookie = parsedCookie(req.header.cookie)
-      if (
-         objCookie.userId === user.id &&
-         objCookie.authorized
-      ) {
+      if (objCookie.userId !== user.id &&
+         !(objCookie.authorized)) {
+         res.writeHead(200)
+         res.end(`Вы не авторизованы`)
+      } else {
          let data = ""
          req.on("data", (chunk) => {
             data += chunk
@@ -79,16 +83,19 @@ const requestListener = (req, res) => {
          res.end(
             `Добро пожаловать, ${parsedCookie(strCookie).username}`
          )
-      } else {
-         res.writeHead(200)
-         res.end(`Вы не авторизованы`)
       }
-   } else if (req.url === "/delete" && req.method === "DELETE") {
+   } else if (
+      req.url === "/delete" && 
+      req.method === "DELETE"
+   ) {
       const objCookie = parsedCookie(req.header.cookie)
       if (
-         objCookie.userId === user.id &&
-         objCookie.authorized
+         objCookie.userId !== user.id && 
+         !objCookie.authorized
       ) {
+         res.writeHead(200)
+         res.end(`Вы не авторизованы`)
+      } else {
          let data = ""
          req.on("data", (chunk) => {
             data += chunk
@@ -110,9 +117,6 @@ const requestListener = (req, res) => {
          })
          res.writeHead(200)
          res.end(`Пользователь ${objCookie.username} удалил файл`)
-      } else {
-         res.writeHead(200)
-         res.end(`Вы не авторизованы`)
       } 
    } else {
       res.writeHead(404)
