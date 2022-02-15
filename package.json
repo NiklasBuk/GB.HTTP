@@ -1,0 +1,29 @@
+{
+  "name": "hw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server2.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server2.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NiklasBuk/HTTP.GB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NiklasBuk/HTTP.GB/issues"
+  },
+  "homepage": "https://github.com/NiklasBuk/HTTP.GB#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
